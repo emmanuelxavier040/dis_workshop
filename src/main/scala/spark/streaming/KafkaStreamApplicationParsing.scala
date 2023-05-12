@@ -7,7 +7,9 @@ import org.apache.spark.streaming.dstream.InputDStream
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.elasticsearch.spark.sparkRDDFunctions
-import xyz.data.RideCleaning
+import spark.streaming.data.RideCleaning
+import spark.streaming.features.RideDuration
+import spark.streaming.integration.kibana.KibanaOps.{sendRideDurationBikeTypeToELK, sendRideDurationUserTypeToELK, sendRidesToELK}
 
 object KafkaStreamApplicationParsing extends App {
 
