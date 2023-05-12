@@ -24,6 +24,7 @@ object KafkaConsumerLocal extends App {
   println("===============")
 
   val consumer = new KafkaConsumer[String, String](props)
+
   println("===============")
 
   consumer.subscribe(java.util.Collections.singletonList(TOPIC))

@@ -23,10 +23,12 @@ object RideCleaning {
   }
 
   def parseToRide(value: String): Ride = {
-
+    if(value.contains("started_at"))
+      return Ride("","",LocalDateTime.now(), LocalDateTime.now(), "","","","",0.0,0.0,0.0,0.0,"")
     val record = value.split(",")
 
     val dateFormat = "dd/MM/yyyy HH:mm"
+//    val dateFormat = "yyyy-MM-dd HH:mm:ss"
     val formatter = DateTimeFormatter.ofPattern(dateFormat)
 
     Ride(
@@ -44,4 +46,25 @@ object RideCleaning {
       if (record.lift(11).get.contentEquals("")) 0.0 else record.lift(11).get.toDouble,
       record.lift(12).get)
   }
+
+  def parseToRideForElastic(ride: Ride): RideElastic = {
+
+    RideElastic(
+      ride.ride_id,
+      ride.rideable_type,
+      ride.started_at+"",
+      ride.ended_at+"",
+      ride.start_station_id,
+      ride.start_station_name,
+      ride.end_station_id,
+      ride.end_station_name,
+      ride.start_lat,
+      ride.start_lng,
+      ride.end_lat,
+      ride.end_lng,
+      ride.member_casual
+    )
+  }
+
+
 }

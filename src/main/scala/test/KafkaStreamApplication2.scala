@@ -3,62 +3,46 @@ package test
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{col, from_json}
 import org.apache.spark.sql.types.{StringType, StructType}
-
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 
 object KafkaStreamApplication2 extends App {
 
+
+  Logger.getLogger("org").setLevel(Level.OFF)
+  Logger.getLogger("akka").setLevel(Level.OFF)
   val spark = SparkSession
     .builder
     .master("local[3]")
     .appName("StructuredNetworkWordCount")
     .getOrCreate()
 
+  spark.sparkContext.setLogLevel("ERROR")
   // Subscribe to 1 topic, with headers
 
   val df = spark.readStream
     .format("kafka")
-    .option("kafka.bootstrap.servers", "127.0.0.1:9092")
+    .option("kafka.bootstrap.servers", "ec2-18-213-16-8.compute-1.amazonaws.com:9092")
     .option("header", "true")
-    .option("subscribe", "test")
+    .option("subscribe", "my-new-topic")
+    .option("kafka.group.id","ad0873818bc6c4a09a2e1dd273e04f6b9")
+
     .option("startingOffsets", "earliest") // From starting
     .load()
 
-  df.printSchema()
-
-  val personStringDF = df.selectExpr("CAST(value AS STRING)")
-
-
-  val schema = new StructType()
-    .add("ride_id", StringType)
-    .add("rideable_type", StringType)
-    .add("started_at", StringType)
-    .add("ended_at", StringType)
-    .add("start_station_name", StringType)
-    .add("start_station_id", StringType)
-    .add("end_station_name", StringType)
-    .add("end_station_id", StringType)
-    .add("start_lat", StringType)
-    .add("start_lng", StringType)
-    .add("end_lat", StringType)
-    .add("end_lng", StringType)
-    .add("member_casual", StringType)
-
-  val personDF = personStringDF.select(from_json(col("value"), schema).as("data"))
-    .select("data.*")
-
-
-  df.selectExpr("CAST(key AS STRING) AS key", "to_json(struct(*)) AS value")
-    .writeStream
+  val rides  = df.select("key")
+  rides.writeStream
     .format("console")
-      .outputMode("append")
-      .start()
-      .awaitTermination()
-
-//  personDF.writeStream
+        .outputMode("append")
+        .start()
+        .awaitTermination()
+//    df.selectExpr("CAST(key AS STRING) AS key", "CAST(value AS STRING) AS value")
+//    .writeStream
 //    .format("console")
-//    .outputMode("append")
-//    .start()
-//    .awaitTermination()
+//      .outputMode("append")
+//      .start()
+//      .awaitTermination()
+
 
 }
 
