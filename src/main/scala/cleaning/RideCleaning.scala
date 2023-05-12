@@ -18,7 +18,7 @@ object RideCleaning {
       return false
 
     if (record.rideable_type != null && record.rideable_type.contains("docked_bike"))
-      return false;
+      return false
 
     true
   }
