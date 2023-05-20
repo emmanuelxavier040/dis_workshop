@@ -43,11 +43,14 @@ object KibanaOps {
     stream.foreachRDD { rdd => rdd.saveToEs(config) }
   }
 
+  def sendStartStationCountsToELK(stream: DStream[(String, Double)]): Unit = {
+    val config = esConfig + ("es.resource" -> s"start_station_rides")
+    stream.foreachRDD { rdd => rdd.saveToEs(config) }
+  }
 
-
-  /*def sendStartStationRidesToELK(stream: DStream[StartStationRides]): Unit = {
-    val config  = esConfig+ ( "es.resource" -> s"start_station_rides")
-    stream.foreachRDD {rdd =>  rdd.saveToEs(config) }
-  }*/
+  def sendEndStationCountsToELK(stream: DStream[(String, Double)]): Unit = {
+    val config = esConfig + ("es.resource" -> s"end_station_rides")
+    stream.foreachRDD { rdd => rdd.saveToEs(config) }
+  }
 
 }

@@ -11,13 +11,14 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object StreamApplication extends App {
 
-  val sparkConf = new SparkConf().setAppName("SparkStreamingApp").setMaster("local[4]")
+  val sparkConf = new SparkConf().setAppName("SparkStreamingApp").setMaster("local[*]")
   val sparkContext = new SparkContext(sparkConf)
   sparkContext.setLogLevel("ERROR")
   val sparkStreamingContext = new StreamingContext(sparkContext, Seconds(1))
 
   val kafkaParams = Map[String, Object](
-    "bootstrap.servers" -> "ec2-18-213-16-8.compute-1.amazonaws.com:9092",
+  //  "bootstrap.servers" -> "ec2-18-213-16-8.compute-1.amazonaws.com:9092",
+    "bootstrap.servers" -> "localhost:9092",
     "key.deserializer" -> classOf[StringDeserializer],
     "value.deserializer" -> classOf[StringDeserializer],
     "group.id" -> "my-next-group2", // change it for a new stream
@@ -25,7 +26,8 @@ object StreamApplication extends App {
     "enable.auto.commit" -> (false: java.lang.Boolean)
   )
 
-  val topics = Array("my-new-topic")
+  //val topics = Array("my-new-topic")
+  val topics = Array("test")
   val stream = KafkaUtils.createDirectStream[String, String](
     sparkStreamingContext,
     PreferConsistent,

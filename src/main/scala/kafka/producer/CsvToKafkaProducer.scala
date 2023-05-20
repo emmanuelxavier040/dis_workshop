@@ -21,7 +21,8 @@ object CsvToKafkaProducer {
     val producer = new KafkaProducer[String, String](props)
 
     // Read CSV file and send records to Kafka
-    val csvFilePath = "E:\\DIS\\kafka\\bin\\windows\\last_twelve_months\\202109-divvy-tripdata.csv"
+    //val csvFilePath = "E:\\DIS\\kafka\\bin\\windows\\last_twelve_months\\202109-divvy-tripdata.csv"
+    val csvFilePath = "/Users/lauraengist/cyclist_data_dis_workshop/202204-divvy-tripdata.csv"
     val file = new File(csvFilePath)
     val br = new BufferedReader(new FileReader(file))
     var line: String = null
@@ -35,7 +36,7 @@ object CsvToKafkaProducer {
 
         producer.send(record)
         line = br.readLine()
-        Thread.sleep(3000)
+        Thread.sleep(3)
       }
     } catch {
       case e: IOException => e.printStackTrace()

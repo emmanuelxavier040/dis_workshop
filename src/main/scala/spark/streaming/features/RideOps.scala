@@ -45,8 +45,9 @@ object RideOps {
   }
 
 
-  def rideDurationForUserType(stream: DStream[Ride]): Unit = {
-    val s = stream.map(ride => UserTypeRideDuration(ride.member_casual, rideDuration(ride)))
-    KibanaOps.sendRideDurationUserTypeToELK(s)
-  }
+  /*def rideDurationForUserType(stream: DStream[Ride]): Unit = {
+    val s = StartStations.percentageOfStartStations(stream)
+    KibanaOps.sendStartStationCountsToELK(s)
+  }*/
+
 }

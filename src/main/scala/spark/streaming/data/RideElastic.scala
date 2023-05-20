@@ -17,7 +17,9 @@ case class RideElastic(ride_id: String,
                        day: String,
                        week: String,
                        month: String,
-                       ride_duration: Double) { }
+                       ride_duration: Double,
+                       start_station_percentage: Double,
+                       end_station_percentage: Double) { }
 
 
 case class BikeTypeRideDuration(rideable_type: String, ride_duration: Double)
