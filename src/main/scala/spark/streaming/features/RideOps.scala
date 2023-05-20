@@ -14,6 +14,20 @@ object RideOps {
       .until(ride.ended_at, ChronoUnit.SECONDS)
   }
 
+  val updateFunction = (newValues: Seq[Int], runningCount: Option[(Int, Int)]) => {
+    val newCount = newValues.sum
+    val totalCount = newCount + runningCount.map(_._1).getOrElse(0)
+    val totalSum = newCount + runningCount.map(_._2).getOrElse(0)
+    Some((totalCount, totalSum))
+  }
+
+  def averageNumberOfRides(stream: DStream[Ride]): Unit = {
+    val totalCounts = stream.map(ride => (ride.rideable_type, 1)).updateStateByKey(updateFunction)
+    val averageCounts = totalCounts.mapValues { case (count, sum) => sum.toDouble / count }
+    KibanaOps.sendAvgCountBikeTypeToELK(averageCounts)
+  }
+
+
   def avgRideDuration(ride: Ride): Unit = {
 
   }

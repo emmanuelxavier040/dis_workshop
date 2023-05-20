@@ -27,11 +27,11 @@ object RideCleaning {
     if(record.rideable_type != null && record.rideable_type.contains("docked_bike"))
       return false
 
-//    if (record.start_station_id == null || record.start_station_id.contentEquals(""))
-//      return false
-//
-//    if (record.end_station_id == null || record.end_station_id.contentEquals(""))
-//      return false
+    if (record.start_station_id == null || record.start_station_id.contentEquals(""))
+      return false
+
+    if (record.end_station_id == null || record.end_station_id.contentEquals(""))
+      return false
 
     true
   }

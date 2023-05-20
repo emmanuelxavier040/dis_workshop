@@ -1,6 +1,8 @@
 package spark.streaming.integration.kibana
 
+import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.dstream.DStream
+import org.elasticsearch.spark.rdd.EsSpark
 import org.elasticsearch.spark.sparkRDDFunctions
 import spark.streaming.data.{BikeTypeRideDuration, RideElastic, UserTypeRideDuration}
 
@@ -21,6 +23,10 @@ object KibanaOps {
     stream.foreachRDD { rdd =>  rdd.saveToEs(config) }
   }
 
+  def sendRideToELK(v : RDD[RideElastic]): Unit = {
+
+  }
+
 
   def sendRideDurationBikeTypeToELK(stream: DStream[BikeTypeRideDuration]): Unit = {
     val config  = esConfig + ( "es.resource" -> s"ride_duration_bike_type")
@@ -31,5 +37,12 @@ object KibanaOps {
     val config  = esConfig+ ( "es.resource" -> s"ride_duration_user_type")
     stream.foreachRDD {rdd =>  rdd.saveToEs(config) }
   }
+
+  def sendAvgCountBikeTypeToELK(stream: DStream[(String, Double)]): Unit = {
+    val config = esConfig + ("es.resource" -> s"avg_count_bike_type")
+    stream.foreachRDD { rdd => rdd.saveToEs(config) }
+  }
+
+
 
 }
