@@ -45,4 +45,9 @@ object KibanaOps {
 
 
 
+  /*def sendStartStationRidesToELK(stream: DStream[StartStationRides]): Unit = {
+    val config  = esConfig+ ( "es.resource" -> s"start_station_rides")
+    stream.foreachRDD {rdd =>  rdd.saveToEs(config) }
+  }*/
+
 }

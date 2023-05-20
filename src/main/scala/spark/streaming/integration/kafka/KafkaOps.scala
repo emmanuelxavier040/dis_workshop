@@ -36,6 +36,7 @@ object KafkaOps {
     val topics = Array("ride-topic")
 //    val topics = Array("my-new-topic")
 //    val topics = Array("test")
+//val topics = Array("my-topic")
     val stream = KafkaUtils.createDirectStream[String, String](
       sparkStreamingContext,
       PreferConsistent,

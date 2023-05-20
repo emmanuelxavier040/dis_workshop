@@ -23,3 +23,5 @@ case class RideElastic(ride_id: String,
 case class BikeTypeRideDuration(rideable_type: String, ride_duration: Double)
 
 case class UserTypeRideDuration(member_casual: String, ride_duration: Double)
+
+//case class DailyPatternBike(rideable_type: String, started_at: String)

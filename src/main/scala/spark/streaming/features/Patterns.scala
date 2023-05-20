@@ -46,4 +46,5 @@ object Patterns {
       println(s"Monthly electric bike rides: $monthlyCounts")
     })
   }
+
 }

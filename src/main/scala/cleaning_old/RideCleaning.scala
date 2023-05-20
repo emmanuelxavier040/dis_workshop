@@ -1,6 +1,4 @@
-package cleaning
-
-import spark.streaming.data.Ride
+package cleaning_old
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
