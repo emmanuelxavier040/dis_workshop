@@ -1,33 +1,49 @@
 package spark.streaming.features
 
-import org.apache.spark.streaming.dstream.DStream
+import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.spark.streaming.dstream.{DStream, InputDStream}
 import spark.streaming.data.{BikeTypeRideDuration, Ride, RideElastic, UserTypeRideDuration}
 
-import java.time.LocalDateTime
+import java.time.{LocalDate}
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 object Patterns {
 
-  def rideDuration(ride: RideElastic) : Long = {
-    println(ride.started_at)
-    val dateFormat = "yyyy-MM-dd'T'HH:mm"
-    val formatter = DateTimeFormatter.ofPattern(dateFormat)
-    LocalDateTime.from(LocalDateTime.parse(ride.started_at, formatter))
-      .until( LocalDateTime.parse(ride.ended_at, formatter), ChronoUnit.SECONDS)
-  }
 
-  def avgRideDuration(ride: Ride): Unit = {
+  def ridePattern(rideStream: DStream[Ride]): Unit = {
 
-  }
+    // Calculate usage patterns
+    rideStream.foreachRDD(rdd => {
+      val currentDate = LocalDate.now()
+      val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
+      // Daily pattern
+      val dailyCounts = rdd.filter { case ride => ride.rideable_type == "electric" }
+        .filter { case ride =>
+          val rideDate = LocalDate.parse(ride.started_at.toString, dateFormatter)
+          rideDate.isEqual(currentDate)
+        }
+        .count()
 
-  def rideDurationForBikeType(stream: DStream[RideElastic]) = {
-    stream.map(ride => BikeTypeRideDuration(ride.rideable_type, rideDuration(ride)))
-  }
+      // Weekly pattern
+      val weeklyCounts = rdd.filter { case ride => ride.rideable_type == "electric" }
+        .filter { case ride =>
+          val rideDate = LocalDate.parse(ride.started_at.toString, dateFormatter)
+          rideDate.isAfter(currentDate.minusDays(7))
+        }
+        .count()
 
+      // Monthly pattern
+      val monthlyCounts = rdd.filter { case ride => ride.rideable_type == "electric" }
+        .filter { case ride =>
+          val rideDate = LocalDate.parse(ride.started_at.toString, dateFormatter)
+          rideDate.isAfter(currentDate.minusMonths(1))
+        }
+        .count()
 
-  def rideDurationForUserType(stream: DStream[RideElastic]) = {
-    stream.map(ride => UserTypeRideDuration(ride.member_casual, rideDuration(ride)))
+      println(s"Daily electric bike rides: $dailyCounts")
+      println(s"Weekly electric bike rides: $weeklyCounts")
+      println(s"Monthly electric bike rides: $monthlyCounts")
+    })
   }
 }

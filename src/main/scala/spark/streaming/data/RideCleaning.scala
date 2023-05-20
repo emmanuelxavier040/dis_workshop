@@ -2,6 +2,10 @@ package spark.streaming.data
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.WeekFields
+import java.util.Locale
+
+import spark.streaming.features.RideOps
 
 object RideCleaning {
 
@@ -21,7 +25,13 @@ object RideCleaning {
       return false
 
     if(record.rideable_type != null && record.rideable_type.contains("docked_bike"))
-      return false;
+      return false
+
+    if (record.start_station_id == null || record.start_station_id.contentEquals(""))
+      return false
+
+    if (record.end_station_id == null || record.end_station_id.contentEquals(""))
+      return false
 
     true
   }
@@ -48,6 +58,8 @@ object RideCleaning {
   }
 
   def parseToRideForElastic(ride: Ride): RideElastic = {
+    val weekFields = WeekFields.of(Locale.getDefault());
+    val weekNumber = ride.started_at.get(weekFields.weekOfWeekBasedYear());
 
     RideElastic(
       ride.ride_id,
@@ -62,7 +74,13 @@ object RideCleaning {
       ride.start_lng,
       ride.end_lat,
       ride.end_lng,
-      ride.member_casual
+      ride.member_casual,
+      ride.started_at.getHour.toString,
+      ride.started_at.getDayOfWeek.toString,
+      weekNumber.toString,
+      ride.started_at.getMonthValue.toString,
+      RideOps.rideDuration(ride)
+
     )
   }
 

@@ -20,8 +20,8 @@ object KafkaOps {
 //    val propertyValue = properties.getProperty("bootstrap.servers")
 //    println(propertyValue)
     val kafkaParams = Map[String, Object](
-//      "bootstrap.servers" -> "ec2-18-213-16-8.compute-1.amazonaws.com:9092",
-        "bootstrap.servers" -> "localhost:9092",
+      "bootstrap.servers" -> "ec2-18-213-16-8.compute-1.amazonaws.com:9092",
+//        "bootstrap.servers" -> "localhost:9092",
       "key.deserializer" -> classOf[StringDeserializer],
       "value.deserializer" -> classOf[StringDeserializer],
       "group.id" -> "test-consumer-group",
@@ -33,8 +33,9 @@ object KafkaOps {
 
   def createKafkaStream(sparkStreamingContext: StreamingContext): InputDStream[ConsumerRecord[String, String]] = {
     val kafkaParams = KafkaOps.kafkaParams()
+    val topics = Array("ride-topic")
 //    val topics = Array("my-new-topic")
-    val topics = Array("test")
+//    val topics = Array("test")
     val stream = KafkaUtils.createDirectStream[String, String](
       sparkStreamingContext,
       PreferConsistent,
