@@ -44,10 +44,4 @@ object RideOps {
     KibanaOps.sendRideDurationBikeTypeToELK(s)
   }
 
-
-  /*def rideDurationForUserType(stream: DStream[Ride]): Unit = {
-    val s = StartStations.percentageOfStartStations(stream)
-    KibanaOps.sendStartStationCountsToELK(s)
-  }*/
-
 }

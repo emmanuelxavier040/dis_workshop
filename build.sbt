@@ -16,6 +16,8 @@ libraryDependencies += "org.apache.kafka" % "kafka-clients" % "3.4.0"
 libraryDependencies += "org.elasticsearch" %% "elasticsearch-spark-20" % "8.6.2"
 
 libraryDependencies += "org.apache.spark" % "spark-streaming-kafka-0-10_2.12" % "3.4.0"
+libraryDependencies += "org.apache.hadoop" % "hadoop-aws" % "3.3.2"
+libraryDependencies += "org.apache.spark" %% "spark-hadoop-cloud" % "3.3.2"
 
 
 lazy val root = (project in file("."))

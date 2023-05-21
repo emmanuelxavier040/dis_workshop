@@ -7,8 +7,9 @@ import org.apache.kafka.clients.producer._
 
 object CsvToKafkaProducer {
 
-  val topicName = "test"
-  val bootstrapServers = "localhost:9092"
+  val topicName = "ride-topic"
+  //val bootstrapServers = "localhost:9092"
+  val bootstrapServers = "ec2-18-213-16-8.compute-1.amazonaws.com:9092"
 
   def main(args: Array[String]): Unit = {
 

@@ -27,18 +27,18 @@ object StartStations {
 
   def percentageOfStartStations(stream: DStream[Ride]): Unit = {
     //setTotal(getTotal + 1.0)
-    /*val totalCounts = stream.map(ride => (ride.start_station_name, 1)).updateStateByKey(updateFunction)
-    val averageCounts = totalCounts.mapValues { case (count, sum) => (sum.toDouble / getTotal) * 100 }
-    averageCounts.print()*/
+    val totalCounts = stream.map(ride => (ride.start_station_name, 1)).updateStateByKey(updateFunction)
+    //val averageCounts = totalCounts.mapValues { case (count, sum) => (sum.toDouble / getTotal) * 100 }
+    //averageCounts.print()
 
     // without updateStateByKey - with checkpointing: streamingContext.checkpoint("/path/to/checkpoint-directory")
-    val totalCounts = stream.map(ride => (ride.start_station_name, 1)).updateStateByKey((newValues: Seq[Int], currentState: Option[Int]) => {
+    /*val totalCounts = stream.map(ride => (ride.start_station_name, 1)).updateStateByKey((newValues: Seq[Int], currentState: Option[Int]) => {
       val newCount = newValues.sum + currentState.getOrElse(0)
       Some(newCount)
-    })
-    val averageCounts = totalCounts.mapValues { case (sum) => (sum.toDouble / getTotal) * 100 }
-    averageCounts.print()
-    //KibanaOps.sendStartStationCountsToELK(averageCounts)
+    })*/
+    val percentage = totalCounts.mapValues { case (count, sum) => (sum.toDouble / getTotal) * 100 }
+    percentage.print()
+    KibanaOps.sendStartStationCountsToELK(percentage)
   }
 
 }

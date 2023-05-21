@@ -80,7 +80,6 @@ object RideCleaning {
       weekNumber.toString,
       ride.started_at.getMonthValue.toString,
       RideOps.rideDuration(ride)
-
     )
   }
 
